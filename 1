@@ -23,6 +23,29 @@ Critical issue: The Jacobian Conjecture is stated for algebraically closed field
 
 …
 
-Show less
+pablogrossi@Mac orthogenesis % lake build JacobianCounterexample
+⚠ [3002/3003] Built JacobianCounterexample
+warning: JacobianCounterexample.lean:36:30: This simp argument is unused:
+  pderiv_mul
 
+Hint: Omit it from the simp argument list.
+  [apply] simp [Matrix.det_fin_three, pderiv_pow, pderiv_X, pderiv_C, Pi.single_eq_same, Pi.single_eq_of_ne]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: JacobianCounterexample.lean:36:42: This simp argument is unused:
+  pderiv_pow
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Matrix.det_fin_three, pderiv_mul, pderiv_X, pderiv_C, Pi.single_eq_same, Pi.single_eq_of_ne]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: JacobianCounterexample.lean:36:64: This simp argument is unused:
+  pderiv_C
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Matrix.det_fin_three, pderiv_mul, pderiv_pow, pderiv_X, Pi.single_eq_same, Pi.single_eq_of_ne]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Build completed successfully (3003 jobs).
+++
 with that poisson and dximier too
