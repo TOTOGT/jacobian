@@ -15,7 +15,13 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      # 1. Set up runtime/language environment (e.g., Python, Node.js, Rust, Go, C++)
-      # 2. Install dependencies
-      # 3. Build the project
-      # 4. Run unit/integration tests
+      - name: Install Elan (Lean toolchain manager)
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Download Mathlib build cache
+        run: lake exe cache get
+
+      - name: Build project and verify proofs
+        run: lake build
