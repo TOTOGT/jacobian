@@ -1,6 +1,6 @@
 name = "jacobian"
 version = "0.1.0"
-defaultTargets = ["JacobianCounterexample", "Poisson", "Dixmier"]
+defaultTargets = ["JacobianCounterexample", "Poisson", "Dixmier", "DualDerivations"]
 
 [[require]]
 name = "mathlib"
@@ -14,3 +14,6 @@ name = "Poisson"
 
 [[lean_lib]]
 name = "Dixmier"
+
+[[lean_lib]]
+name = "DualDerivations"
