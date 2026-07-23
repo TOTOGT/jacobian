@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
 
       - name: Install Elan (Lean toolchain manager)
         run: |
-          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
       - name: Download Mathlib build cache
@@ -25,51 +25,16 @@ jobs:
 
       - name: Build project and verify proofs
         run: lake build
-      
+
       - name: Download Mathlib build cache (best-effort)
         run: lake exe cache get || true
 
-      - name: Build project and verify proofs
+      - name: Build project and verify proofs (repeat)
         run: lake build
-      
+
       - name: Ensure Lake dependencies are fetched
-        run: | 
+        run: |
           set -euo pipefail
           lake update
           echo "Listing mathlib LinearAlgebra directory:"
           ls -la .lake/packages/mathlib/Mathlib/LinearAlgebra || true
-      - name: Install Elan (Lean toolchain manager)
-        run: |
-        curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
-        echo "$HOME/.elan/bin" >> $GITHUB_PATH
-
-      - name: Ensure Lake dependencies are fetched
-        run: |
-        set -euo pipefail
-        lake update
-        echo "Listing mathlib LinearAlgebra directory (after lake update):"
-        ls -la .lake/packages/mathlib/Mathlib/LinearAlgebra || true
-
-      - name: Download Mathlib build cache (best-effort)
-        run: lake exe cache get || true
-
-      - name: Build project and verify proofs
-        run: lake build
-       - name: Install Elan (Lean toolchain manager)
-        run: |
-        curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
-        echo "$HOME/.elan/bin" >> $GITHUB_PATH
-    
-
-      - name: Ensure Lake dependencies are fetched
-        run: |
-        set -euo pipefail
-          lake update
-          echo "Listing mathlib LinearAlgebra directory (after lake update):"
-          ls -la .lake/packages/mathlib/Mathlib/LinearAlgebra || true
-
-        - name: Download Mathlib build cache (best-effort)
-        run: lake exe cache get || true
-
-- name: Build project and verify proofs
-  run: lake build
