@@ -38,4 +38,38 @@ jobs:
           lake update
           echo "Listing mathlib LinearAlgebra directory:"
           ls -la .lake/packages/mathlib/Mathlib/LinearAlgebra || true
-       
+      - name: Install Elan (Lean toolchain manager)
+        run: |
+        curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+        echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Ensure Lake dependencies are fetched
+        run: |
+        set -euo pipefail
+        lake update
+        echo "Listing mathlib LinearAlgebra directory (after lake update):"
+        ls -la .lake/packages/mathlib/Mathlib/LinearAlgebra || true
+
+      - name: Download Mathlib build cache (best-effort)
+        run: lake exe cache get || true
+
+      - name: Build project and verify proofs
+        run: lake build
+       - name: Install Elan (Lean toolchain manager)
+        run: |
+        curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+        echo "$HOME/.elan/bin" >> $GITHUB_PATH
+    
+
+      - name: Ensure Lake dependencies are fetched
+        run: |
+        set -euo pipefail
+          lake update
+          echo "Listing mathlib LinearAlgebra directory (after lake update):"
+          ls -la .lake/packages/mathlib/Mathlib/LinearAlgebra || true
+
+        - name: Download Mathlib build cache (best-effort)
+        run: lake exe cache get || true
+
+- name: Build project and verify proofs
+  run: lake build
