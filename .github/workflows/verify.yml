@@ -28,13 +28,14 @@ jobs:
       
       - name: Download Mathlib build cache (best-effort)
         run: lake exe cache get || true
+
+      - name: Build project and verify proofs
+        run: lake build
       
       - name: Ensure Lake dependencies are fetched
         run: | 
-        set -euo pipefail
-        lake update
-        echo "Listing mathlib LinearAlgebra directory:"
-        ls -la .lake/packages/mathlib/Mathlib/LinearAlgebra || true
-
-        - name: Build project and verify proofs
-        run: lake build
+          set -euo pipefail
+          lake update
+          echo "Listing mathlib LinearAlgebra directory:"
+          ls -la .lake/packages/mathlib/Mathlib/LinearAlgebra || true
+       
