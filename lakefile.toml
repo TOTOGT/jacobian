@@ -1,7 +1,6 @@
 name = "jacobian"
 version = "0.1.0"
-keywords = ["math"]
-defaultTargets = ["JacobianCounterexample"]
+defaultTargets = ["JacobianCounterexample", "Poisson", "Dixmier"]
 
 [[require]]
 name = "mathlib"
@@ -9,3 +8,9 @@ scope = "leanprover-community"
 
 [[lean_lib]]
 name = "JacobianCounterexample"
+
+[[lean_lib]]
+name = "Poisson"
+
+[[lean_lib]]
+name = "Dixmier"
