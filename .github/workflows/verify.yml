@@ -1,4 +1,4 @@
-name: verify Lean 4
+name: CI
 
 on:
   push:
