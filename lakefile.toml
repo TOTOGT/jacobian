@@ -8,3 +8,9 @@ scope = "leanprover-community"
 
 [[lean_lib]]
 name = "JacobianCounterexample"
+
+[[lean_lib]]
+name = "Poisson"
+
+[[lean_lib]]
+name = "Dixmier"
