@@ -28,17 +28,9 @@ noncomputable def jacobianInverse (F : Fin 3 → R) : Matrix (Fin 3) (Fin 3) R :
   (C (-1 / 2 : ℚ)) • (jacobianMatrix F).adjugate
 
 /-- Dual derivations ∂'ᵢ = Σⱼ (J⁻¹)ⱼᵢ ∂ⱼ bundled as linear maps on ℚ[x₁,x₂,x₃]. -/
-noncomputable def dualDerivation (F : Fin 3 → R) (i : Fin 3) : R →ₗ[ℚ] R where
-  toFun p := ∑ j : Fin 3, (jacobianInverse F j i) * (pderiv j p)
-  map_add' p q := by
-    simp only [map_add, mul_add, Finset.sum_add_distrib]
-  map_smul' c p := by
-    simp only [RingHom.id_apply]
-    have h : ∀ j : Fin 3, (jacobianInverse F j i) * pderiv j (c • p) = c • ((jacobianInverse F j i) * pderiv j p) := by
-      intro j
-      rw [map_smul, Algebra.smul_def, Algebra.smul_def (c := c), mul_assoc, mul_left_comm (C c)]
-    simp_rw [h]
-    rw [← Finset.smul_sum]
+noncomputable def dualDerivation (F : Fin 3 → R) (i : Fin 3) : R →ₗ[ℚ] R :=
+  Finset.sum Finset.univ (fun j =>
+    (LinearMap.mulLeft ℚ (jacobianInverse F j i)).comp (pderiv j).toLinearMap)
 
 /-- Fundamental identity: ∂'ᵢ(F_j) = δ_ij. -/
 theorem dualDerivation_apply_F (F : Fin 3 → R) (hdet : (jacobianMatrix F).det = C (-2 : ℚ)) (i j : Fin 3) :
