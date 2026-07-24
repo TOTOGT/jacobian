@@ -12,7 +12,7 @@ noncomputable def jacobianMatrix (F : Fin 3 → R) : Matrix (Fin 3) (Fin 3) R :=
   Matrix.of (fun i j => pderiv j (F i))
 
 noncomputable def jacobianInverse (F : Fin 3 → R) : Matrix (Fin 3) (Fin 3) R :=
-  (C (-1 / 2 : ℚ)) • (jacobianMatrix F).adjugate
+  (C (-1 / 2 : ℚ) : R) • (jacobianMatrix F).adjugate
 
 noncomputable def dualDerivation (F : Fin 3 → R) (i : Fin 3) : R →ₗ[ℚ] R :=
   Finset.sum Finset.univ (fun j =>
@@ -43,7 +43,7 @@ theorem dualDerivation_apply_F (F : Fin 3 → R)
   have step : dualDerivation F i (F j) = (jacobianMatrix F * jacobianInverse F) j i := by
     dsimp [dualDerivation]
     rw [LinearMap.sum_apply]
-    simp only [LinearMap.comp_apply, LinearMap.mulLeft_apply, LinearMap.toLinearMap_apply]
+    simp only [LinearMap.comp_apply, LinearMap.mulLeft_apply]
     rw [Matrix.mul_apply]
     apply Finset.sum_congr rfl
     intro k _
