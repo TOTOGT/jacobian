@@ -114,3 +114,23 @@ k
  ∣.
 
 Completeness: Once the sorry is closed, Lean's kernel verifies every step deterministically.
+
+## Active Verification Priorities & Modules
+
+### Current Modules
+
+* **`JacobianCounterexample.lean`**: Counterexample polynomial map formulation.
+* **`DualDerivations.lean`**: Dual derivation operators $\partial'_i = \sum_j (J^{-1})_{ji} \partial_j$.
+* **`SpectralDiagonalBound.lean`**: Matrix spectral radius bounds on diagonal entries ($\forall i, |A_{ii}| \le \rho(A)$ for normal/Hermitian matrices).
+* **`Dixmier.lean`**: Dixmier conjecture & endomorphism commutativity bounds.
+* **`Poisson.lean`**: Symplectic Poisson bracket formulations.
+
+---
+
+### Theorem Registry
+
+| Module | Theorem / Definition | Status | Proof Strategy / Notes |
+| :--- | :--- | :--- | :--- |
+| `DualDerivations.lean` | `dualDerivation_apply_F` | **`[PROVED]`** | Matrix adjugate identity $J \cdot \text{adj}(J) = \det(J) \cdot I$ |
+| `SpectralDiagonalBound.lean` | `diagonal_le_spectralRadius` | **`[CONJECTURAL]`** | Rayleigh quotient / Convex hull of spectrum |
+| `Poisson.lean` | `standardPoissonBracket_is_valid` | **`[PROVE-ME]`** | Jacobi identity verification |
