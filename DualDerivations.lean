@@ -26,7 +26,7 @@ theorem jacobian_mul_inverse_eq_one (F : Fin 3 → R)
   rw [Matrix.mul_smul, Matrix.mul_adjugate, hdet]
   -- Combine C(-2) and C(-1/2)
   rw [← smul_assoc]
-  have h_coeff : (C (-2 : ℚ) * C (-1 / 2 : ℚ)) = 1 := by
+  have h_coeff : (C (-2 : ℚ) * C (-1 / 2 : ℚ) : R) = 1 := by
     rw [← map_mul]
     norm_num
   -- Substitute scalar product C(-2) * C(-1/2) = 1
