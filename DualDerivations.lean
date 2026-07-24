@@ -33,12 +33,10 @@ noncomputable def dualDerivation (F : Fin 3 → R) (i : Fin 3) : R →ₗ[ℚ] R
   map_add' p q := by
     simp only [map_add, mul_add, Finset.sum_add_distrib]
   map_smul' c p := by
-    simp only [Algebra.smul_def]
-    -- Rewriting smul action using C c for MvPolynomial ℚ
-    have h : ∀ j : Fin 3, pderiv j (C c * p) = C c * pderiv j p := by
-      intro j; simp [pderiv_C, map_mul]
-    simp_rw [h, mul_assoc]
-    rw [← Finset.mul_sum]
+    simp only [RingHom.id_apply]
+    have h : ∀ j : Fin 3, pderiv j (c • p) = c • pderiv j p := fun j => map_smul (pderiv j) c p
+    simp_rw [h]
+    simp only [Algebra.smul_mul_assoc, Finset.smul_sum]
 
 /-- Fundamental identity: ∂'ᵢ(F_j) = δ_ij. -/
 theorem dualDerivation_apply_F (F : Fin 3 → R) (hdet : (jacobianMatrix F).det = C (-2 : ℚ)) (i j : Fin 3) :
