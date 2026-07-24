@@ -27,7 +27,7 @@ no longer exists — use the norm `‖·‖` instead.
 /-- Spectral radius of a matrix given a real-valued eigenvalue assignment
 (as produced by `Matrix.IsHermitian.eigenvalues` for Hermitian matrices). -/
 noncomputable def matrixSpectralRadius (A : Matrix n n ℂ) (ev : n → ℝ) : ℝ :=
-  sup univ (fun i => |ev i|)
+  sSup (Set.range (fun i => |ev i|))
 
 /-- Lemma 1: The standard basis vector quadratic form eᵢ* A eᵢ evaluates to A i i. -/
 lemma diagonal_eq_quadForm (A : Matrix n n ℂ) (i : n) :
