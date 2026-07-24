@@ -1,74 +1,45 @@
-import Mathlib.Algebra.MvPolynomial.PDeriv
-import Mathlib.Algebra.MvPolynomial.CommRing
-import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import Mathlib.Data.Complex.Basic
+import Mathlib.LinearAlgebra.Eigenspace.Basic
+import Mathlib.LinearAlgebra.Matrix.Hermitian
+import Mathlib.Analysis.Matrix.Spectrum
+import Mathlib.Analysis.InnerProductSpace.Spectrum
 import Mathlib.Tactic
 
-open MvPolynomial
+open Matrix Finset
 
-noncomputable section
+variable {n : Type _} [Fintype n] [DecidableEq n]
 
-def xVar : MvPolynomial (Fin 3) ℚ := X 0
-def yVar : MvPolynomial (Fin 3) ℚ := X 1
-def zVar : MvPolynomial (Fin 3) ℚ := X 2
+/-!
+# Diagonal Entry Bound by Spectral Radius
 
-def F1 : MvPolynomial (Fin 3) ℚ :=
-  (C 1 + xVar * yVar) ^ 3 * zVar
-    + yVar ^ 2 * (C 1 + xVar * yVar) * (C 4 + C 3 * xVar * yVar)
+STATUS: [CONJECTURAL] / Unverified Draft.
+Framework Target: Spectral bound on matrix diagonal entries.
+Author: Pablo Nogueira Grossi / dm³
 
-def F2 : MvPolynomial (Fin 3) ℚ :=
-  yVar
-    + C 3 * xVar * (C 1 + xVar * yVar) ^ 2 * zVar
-    + C 3 * xVar * yVar ^ 2 * (C 4 + C 3 * xVar * yVar)
+NOTE: renamed the local radius definition to `matrixSpectralRadius` — Mathlib
+already owns the name `spectralRadius` globally (general Banach-algebra
+spectral radius, `Mathlib.Analysis.Normed.Algebra.Spectrum`), which is
+transitively imported here via `InnerProductSpace.Spectrum`. Reusing the
+bare name collided with it. Also: `Matrix.IsHermitian.eigenvalues` returns
+`n → ℝ` (Hermitian eigenvalues are real), not `n → ℂ`, and `Complex.abs`
+no longer exists — use the norm `‖·‖` instead.
+-/
 
-def F3 : MvPolynomial (Fin 3) ℚ :=
-  C 2 * xVar - C 3 * xVar ^ 2 * yVar - xVar ^ 3 * zVar
+/-- Spectral radius of a matrix given a real-valued eigenvalue assignment
+(as produced by `Matrix.IsHermitian.eigenvalues` for Hermitian matrices). -/
+noncomputable def matrixSpectralRadius (A : Matrix n n ℂ) (ev : n → ℝ) : ℝ :=
+  sSup (Set.range (fun i => |ev i|))
 
-/-- The 3x3 Jacobian matrix of partial derivatives. -/
-def jacobianMatrix : Matrix (Fin 3) (Fin 3) (MvPolynomial (Fin 3) ℚ) :=
-  !![pderiv 0 F1, pderiv 1 F1, pderiv 2 F1;
-     pderiv 0 F2, pderiv 1 F2, pderiv 2 F2;
-     pderiv 0 F3, pderiv 1 F3, pderiv 2 F3]
+/-- Lemma 1: The standard basis vector quadratic form eᵢ* A eᵢ evaluates to A i i. -/
+lemma diagonal_eq_quadForm (A : Matrix n n ℂ) (i : n) :
+    A i i = ∑ j, ∑ k, (if j = i then (1 : ℂ) else 0) * A j k * (if k = i then (1 : ℂ) else 0) := by
+  sorry -- [PROVE-ME]: Standard matrix index extraction via indicator sums
 
-set_option maxHeartbeats 4000000 in
-set_option maxRecDepth 8000 in
-theorem jacobian_det_eq_neg_two :
-    jacobianMatrix.det = C (-2 : ℚ) := by
-  unfold jacobianMatrix F1 F2 F3 xVar yVar zVar
-  simp [Matrix.det_fin_three, map_add, map_sub, pderiv_mul, pderiv_pow,
-        pderiv_X, pderiv_C, Pi.single_eq_same, Pi.single_eq_of_ne]
-  simp only [map_ofNat]
-  ring
-
-def p1 : Fin 3 → ℚ := ![0, 0, -1/4]
-def p2 : Fin 3 → ℚ := ![1, -3/2, 13/2]
-def p3 : Fin 3 → ℚ := ![-1, 3/2, 13/2]
-
-/-- The three distinct points collapse under the map F = (F1, F2, F3). -/
-set_option maxHeartbeats 1000000 in
-theorem points_collide :
-    (eval p1 F1, eval p1 F2, eval p1 F3) = (-1/4, 0, 0) ∧
-    (eval p2 F1, eval p2 F2, eval p2 F3) = (-1/4, 0, 0) ∧
-    (eval p3 F1, eval p3 F2, eval p3 F3) = (-1/4, 0, 0) := by
-  refine ⟨?_, ?_, ?_⟩ <;>
-  · simp [F1, F2, F3, xVar, yVar, zVar, p1, p2, p3]
-    try norm_num
-
-/-- The three points p1, p2, p3 are pairwise distinct. -/
-theorem points_pairwise_distinct : p1 ≠ p2 ∧ p1 ≠ p3 ∧ p2 ≠ p3 := by
-  refine ⟨?_, ?_, ?_⟩ <;>
-  · intro h
-    have := congrFun h 0
-    simp only [p1, p2, p3] at this
-    try norm_num at this
-
-/-- Main Result: The map has constant nonzero determinant det J = -2, but is not injective. -/
-theorem not_injective_despite_constant_jacobian :
-    jacobianMatrix.det = C (-2 : ℚ) ∧
-    ¬ Function.Injective (fun p : Fin 3 → ℚ => (eval p F1, eval p F2, eval p F3)) := by
-  refine ⟨jacobian_det_eq_neg_two, ?_⟩
-  intro hinj
-  obtain ⟨e1, e2, e3⟩ := points_collide
-  have h12 : p1 = p2 := hinj (e1.trans e2.symm)
-  exact points_pairwise_distinct.1 h12
-
-end
+/-- Main Theorem: For a Hermitian matrix A, the magnitude of any diagonal entry
+    A i i is bounded by its spectral radius. -/
+theorem diagonal_le_spectralRadius
+    (A : Matrix n n ℂ)
+    (hA : A.IsHermitian)
+    (i : n) :
+    ‖A i i‖ ≤ matrixSpectralRadius A hA.eigenvalues := by
+  sorry -- [PROVE-ME]: Schur-Horn / Spectral decomposition convex hull bound
