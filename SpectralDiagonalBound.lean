@@ -1,5 +1,5 @@
 import Mathlib.Data.Complex.Basic
-import Mathlib.LinearAlgebra.Matrix.Spectrum
+import Mathlib.LinearAlgebra.Eigenspace.Basic
 import Mathlib.LinearAlgebra.Matrix.Hermitian
 import Mathlib.Analysis.InnerProductSpace.Spectrum
 import Mathlib.Tactic
