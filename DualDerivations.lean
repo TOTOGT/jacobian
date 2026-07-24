@@ -22,9 +22,10 @@ abbrev R := MvPolynomial (Fin 3) ℚ
 noncomputable def jacobianMatrix (F : Fin 3 → R) : Matrix (Fin 3) (Fin 3) R :=
   Matrix.of (fun i j => pderiv j (F i))
 
-/-- The matrix inverse J⁻¹, valid because det J = -2 is a unit in ℚ[x₁,x₂,x₃]. -/
+/-- The matrix inverse J⁻¹, valid because det J = -2 is a unit in ℚ[x₁,x₂,x₃].
+    Uses C (-1/2) to embed the scalar coefficient cleanly in R. -/
 noncomputable def jacobianInverse (F : Fin 3 → R) : Matrix (Fin 3) (Fin 3) R :=
-  (- (1 / 2 : ℚ)) • (jacobianMatrix F).adjugate
+  (C (-1 / 2 : ℚ)) • (jacobianMatrix F).adjugate
 
 /-- Dual derivations ∂'ᵢ = Σⱼ (J⁻¹)ⱼᵢ ∂ⱼ bundled as linear maps on ℚ[x₁,x₂,x₃]. -/
 noncomputable def dualDerivation (F : Fin 3 → R) (i : Fin 3) : R →ₗ[ℚ] R where
@@ -32,9 +33,14 @@ noncomputable def dualDerivation (F : Fin 3 → R) (i : Fin 3) : R →ₗ[ℚ] R
   map_add' p q := by
     simp only [map_add, mul_add, Finset.sum_add_distrib]
   map_smul' c p := by
-    simp only [RingHom.id_apply, map_smul, mul_smul_comm, Finset.smul_sum]
+    simp only [Algebra.smul_def]
+    -- Rewriting smul action using C c for MvPolynomial ℚ
+    have h : ∀ j : Fin 3, pderiv j (C c * p) = C c * pderiv j p := by
+      intro j; simp [pderiv_C, map_mul]
+    simp_rw [h, mul_assoc]
+    rw [← Finset.mul_sum]
 
 /-- Fundamental identity: ∂'ᵢ(F_j) = δ_ij. -/
-theorem dualDerivation_apply_F (F : Fin 3 → R) (hdet : (jacobianMatrix F).det = -2) (i j : Fin 3) :
+theorem dualDerivation_apply_F (F : Fin 3 → R) (hdet : (jacobianMatrix F).det = C (-2 : ℚ)) (i j : Fin 3) :
     dualDerivation F i (F j) = if i = j then 1 else 0 := by
   sorry -- [PROVE-ME]: Matrix inverse multiplication identity (J⁻¹ J = I)
