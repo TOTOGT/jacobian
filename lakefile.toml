@@ -1,6 +1,6 @@
 name = "jacobian"
 version = "0.1.0"
-defaultTargets = ["JacobianCounterexample", "Poisson", "Dixmier", "DualDerivations", "SpectralDiagonalBound"]
+defaultTargets = ["JacobianCounterexample", "Poisson", "Dixmier", "DualDerivations", "SpectralDiagonalBound", "StandardConjectures"]
 
 [[require]]
 name = "mathlib"
@@ -20,3 +20,6 @@ name = "DualDerivations"
 
 [[lean_lib]]
 name = "SpectralDiagonalBound"
+
+[[lean_lib]]
+name = "StandardConjectures"
