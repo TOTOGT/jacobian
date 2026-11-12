@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jacobian — a Lean 4 verification sample by DM3-lab</title>
+<style>
+  :root { --bg:#fbfaf7; --fg:#1d1d1b; --muted:#5d5b55; --line:#dcd8cd; --accent:#1f5f8b; --ok:#216e39; --open:#8a5a00; --code:#f1eee6; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#171816; --fg:#ecebe6; --muted:#a3a198; --line:#34352f; --accent:#7fb7e0; --ok:#6fcf8a; --open:#e0b255; --code:#232420; } }
+  body { margin:0; background:var(--bg); color:var(--fg); font:17px/1.6 Georgia, "Times New Roman", serif; }
+  main { max-width:46rem; margin:0 auto; padding:2.5rem 1rem 4rem; }
+  h1 { font-size:2rem; line-height:1.2; margin:0 0 .25rem; }
+  h2 { font-size:1.25rem; margin:2.4rem 0 .6rem; border-bottom:1px solid var(--line); padding-bottom:.25rem; }
+  .lead { color:var(--muted); margin:.2rem 0 1.5rem; }
+  a { color:var(--accent); }
+  code, pre { font-family: ui-monospace, Menlo, Consolas, monospace; font-size:.9em; background:var(--code); border-radius:4px; }
+  code { padding:.1em .3em; }
+  pre { padding:.8rem 1rem; overflow-x:auto; }
+  .tablewrap { overflow-x:auto; }
+  table { border-collapse:collapse; width:100%; min-width:32rem; font-size:.95rem; }
+  th, td { text-align:left; padding:.45rem .6rem; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-size:.8rem; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); }
+  .proved { color:var(--ok); font-weight:bold; }
+  .open { color:var(--open); font-weight:bold; }
+  .sample { border:1px solid var(--accent); border-radius:6px; padding:.9rem 1.1rem; margin:0 0 1.6rem; }
+  .sample .tag { font:600 .75rem/1 ui-monospace, Menlo, monospace; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+  .sample p { margin:.5rem 0 0; }
+  .note { border-left:3px solid var(--open); padding:.2rem 1rem; margin:1.2rem 0; color:var(--muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>jacobian</h1>
+<p class="lead">Small algebra theorems, written in Lean 4 and checked by the computer rather than by trust.</p>
+
+<div class="sample">
+<span class="tag">Verification sample · DM3-lab</span>
+<p>This repository is a worked sample of formal-verification work: precise statements, machine-checked proofs,
+a pinned and reproducible build, continuous integration, and a registry that says exactly which results are
+proved and which are only stated. It is the kind of deliverable DM3-lab (G6 LLC) produces for a client's
+mathematical or algorithmic claim.</p>
+</div>
+
+<h2>What this repository is</h2>
+<p>This is a collection of mathematical statements about matrices and polynomials, each written in
+<a href="https://lean-lang.org">Lean 4</a> using the <a href="https://leanprover-community.github.io">Mathlib</a>
+library. Lean is a proof checker: if a file builds, every step of every proof in it was verified by Lean's
+kernel. There is no <code>sorry</code> (Lean's "proof omitted" marker) anywhere in the repository.</p>
+<p>The project began as a check of the Jacobian-conjecture setting and moved to a set of
+self-contained results around it. It does <strong>not</strong> prove or disprove the Jacobian, Dixmier or
+Poisson conjectures. Those are famous open problems, and here they appear only as precise statements.</p>
+
+<h2>What it proves</h2>
+<div class="tablewrap">
+<table>
+<tr><th>Module</th><th>Result</th><th>Status</th></tr>
+<tr><td><code>SpectralDiagonalBound</code></td>
+    <td>For a Hermitian complex matrix <i>A</i>, every diagonal entry satisfies |A<sub>ii</sub>| ≤ max |λ|, the largest absolute eigenvalue.</td>
+    <td class="proved">proved</td></tr>
+<tr><td><code>Poisson</code></td>
+    <td>The standard symplectic Poisson bracket on ℚ[x₁…xₘ, y₁…yₘ] is skew-symmetric, obeys the Leibniz rule and satisfies the Jacobi identity.</td>
+    <td class="proved">proved</td></tr>
+<tr><td><code>Dixmier</code></td>
+    <td>The Weyl-algebra commutation relation ∂ᵢ(xⱼp) − xⱼ∂ᵢp = δᵢⱼ·p.</td>
+    <td class="proved">proved</td></tr>
+<tr><td><code>DualDerivations</code></td>
+    <td>Dual derivations built from the inverse Jacobian, in the special case where the determinant equals the constant −2 (three variables). This is one case, not the general conjecture.</td>
+    <td class="proved">proved</td></tr>
+<tr><td><code>StandardConjectures</code></td>
+    <td>Finite-dimensional linear algebra steps (perfect pairings, injective ⇔ surjective) used in arguments about the standard conjectures.</td>
+    <td class="proved">proved</td></tr>
+<tr><td><code>Dixmier</code>, <code>Poisson</code></td>
+    <td>The Dixmier conjecture and the Poisson conjecture, written as Lean statements.</td>
+    <td class="open">open, statement only</td></tr>
+</table>
+</div>
+<p class="note">"Compiles" is not the same as "proves what its name says". Each row above describes what the
+theorem actually states. The two conjectures are definitions of a proposition, not theorems.</p>
+
+<h2>Check it yourself</h2>
+<p>You need <a href="https://github.com/leanprover/elan">elan</a> (the Lean version manager). Mathlib and the
+Lean version are pinned by the committed <code>lake-manifest.json</code> and <code>lean-toolchain</code>, so the
+build is reproducible.</p>
+<pre>git clone https://github.com/TOTOGT/jacobian
+cd jacobian
+lake build</pre>
+<p>A successful build prints <code>Build completed successfully</code>. The first build downloads Mathlib's
+compiled cache and can take a while. A GitHub Actions workflow in <code>.github/workflows/verify.yml</code>
+runs the same build on every push.</p>
+
+<h2>Layout</h2>
+<p><code>Jacobian.lean</code> is the umbrella module that imports everything. The other files are the modules in
+the table. <code>README.md</code> holds the theorem registry with proof notes.</p>
+
+<h2>What a verification engagement looks like</h2>
+<p>Everything a client would receive is visible here: the claim written as a Lean statement, the proof, a build
+anyone can rerun, a CI badge-worthy workflow, and an honest status table. Failures are part of the record too:
+the git history shows proofs that were wrong and fixed against the compiler. To discuss verifying your own
+claim, see the <a href="https://github.com/TOTOGT/DM3-lab">DM3-lab repository</a>.</p>
+
+<h2>Author</h2>
+<p>Pablo Nogueira Grossi, G6 LLC, Newark NJ. DM3-lab is G6 LLC's formal-verification practice.</p>
+</main>
+</body>
+</html>
