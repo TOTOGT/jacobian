@@ -13,6 +13,7 @@ Build: `lake build` (Mathlib is pinned by the committed `lake-manifest.json` and
 | `Jacobian.lean` | Umbrella module (renamed from `JacobianCounterexample.lean`, which was a copy of `SpectralDiagonalBound.lean` and contained no counterexample). |
 | `SpectralDiagonalBound.lean` | For a Hermitian complex matrix, every diagonal entry is bounded by the spectral radius. |
 | `Poisson.lean` | The standard symplectic Poisson bracket on `ℚ[x₁..xₘ, y₁..yₘ]`, with the Poisson axioms proved. |
+| `PoissonJacobian.lean` | Poisson endomorphisms have Jacobian determinant ±1 (reduction toward the Jacobian conjecture). |
 | `Dixmier.lean` | The Weyl algebra as operators on `ℚ[x₁..xₙ]`, the commutation relation, and the Dixmier conjecture as a statement only. |
 | `DualDerivations.lean` | Dual derivations built from the Jacobian inverse (the special case det J = -2). |
 | `StandardConjectures.lean` | Algebraic steps used in arguments about the standard conjectures, plus the conjectures as statements. |
@@ -28,6 +29,7 @@ Build: `lake build` (Mathlib is pinned by the committed `lake-manifest.json` and
 | `Poisson` | `standardPoissonBracket_is_valid` | PROVED | The bracket is a `PoissonBracket` structure. |
 | `Dixmier` | `pderiv_mulX_comm` | PROVED | `∂ᵢ(xⱼ p) − xⱼ ∂ᵢ p = δᵢⱼ p`. |
 | `Dixmier` | `DixmierConjecture` | OPEN | Statement only (`def … : Prop`). Equivalent to the Poisson conjecture (Belov-Kanel–Kontsevich). |
+| `PoissonJacobian` | `poisson_map_det_sq`, `poisson_map_det_unit` | PROVED | A Poisson endomorphism of ℚ[x,y] has Jacobian determinant ±1. Standard reduction, not a proof of the Poisson conjecture. |
 | `Poisson` | `PoissonConjecture` | OPEN | Statement only. |
 | `DualDerivations` | `dualDerivation_apply_F` | PROVED | Holds under the hypothesis `det J = C (-2)`, a specific constant, not the general Jacobian conjecture. |
 | `StandardConjectures` | `injective_is_surjective_of_pairing` etc. | PROVED | Finite-dimensional linear algebra steps. |

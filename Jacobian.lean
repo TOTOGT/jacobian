@@ -3,6 +3,7 @@ import Poisson
 import Dixmier
 import DualDerivations
 import StandardConjectures
+import PoissonJacobian
 
 /-!
 # Jacobian (umbrella module)
