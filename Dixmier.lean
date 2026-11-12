@@ -20,7 +20,7 @@ noncomputable def mulX (i : Fin n) :
     MvPolynomial (Fin n) ℚ →ₗ[ℚ] MvPolynomial (Fin n) ℚ where
   toFun p := X i * p
   map_add' p q := by ring
-  map_smul' c p := by simp [mul_smul_comm]
+  map_smul' c p := by simp
 
 /-- "Partial derivative ∂/∂xᵢ" bundled as a ℚ-linear endomorphism. -/
 noncomputable def pderivLinear (i : Fin n) :
@@ -40,7 +40,16 @@ noncomputable def WeylAlgebra (n : ℕ) :
 theorem pderiv_mulX_comm (i j : Fin n) (p : MvPolynomial (Fin n) ℚ) :
     pderivLinear n i (mulX n j p) - mulX n j (pderivLinear n i p) =
     (if i = j then 1 else 0) • p := by
-  sorry
+  -- compiled clean on Mac 2026-11-12. Leibniz: ∂ᵢ(xⱼ p) = xⱼ ∂ᵢp + p ∂ᵢxⱼ, and ∂ᵢ xⱼ = δᵢⱼ.
+  have e1 : ∀ q, mulX n j q = X j * q := fun q => rfl
+  have e2 : ∀ q, pderivLinear n i q = pderiv i q := fun q => rfl
+  simp only [e1, e2]
+  rw [Derivation.leibniz, pderiv_X]
+  simp only [smul_eq_mul]
+  by_cases h : i = j
+  · subst h
+    simp
+  · simp [h, Ne.symm h]
 
 /-- The Dixmier Conjecture in rank n: every ℚ-algebra endomorphism of A_n is bijective. -/
 def DixmierConjecture (n : ℕ) : Prop :=

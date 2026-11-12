@@ -1,136 +1,35 @@
-Out with the Jacobian; good job everybody. 
-In with my own theorems; 
+# jacobian
 
-Candidate Theorem Statement: Diagonal Entry Bound for Normal Matrices
-In matrix theory, Rayleigh quotient bounds and the Schur–Horn theorem give us a classic result: the diagonal entries of a normal matrix A∈C 
-n×n
-  lie inside the convex hull of its spectrum. Consequently, every diagonal entry A 
-ii
-​
-  is bounded by the spectral radius ρ(A):
+Lean 4 / Mathlib formalizations. Status as of 2026-11-12. A theorem marked **PROVED** here has
+compiled on the author's Mac with no `sorry`; "compiles" is not the same claim as "proves what its
+name says", so each row says what the theorem actually establishes.
 
-∀i,∣A 
-ii
-​
- ∣≤ 
-λ∈σ(A)
-max
-​
- ∣λ∣
-Let's formalize a precise R / C formulation in Lean 4.
+Build: `lake build` (Mathlib is pinned by the committed `lake-manifest.json` and `lean-toolchain`).
 
-Draft File: SpectralDiagonalBound.lean
-Lean
-import Mathlib.Data.Complex.Basic
-import Mathlib.LinearAlgebra.Matrix.Spectrum
-import Mathlib.LinearAlgebra.Matrix.Hermitian
-import Mathlib.Analysis.InnerProductSpace.Spectrum
-import Mathlib.Tactic
+## Modules
 
-open Matrix Finset
+| Module | What it contains |
+| :--- | :--- |
+| `Jacobian.lean` | Umbrella module (renamed from `JacobianCounterexample.lean`, which was a copy of `SpectralDiagonalBound.lean` and contained no counterexample). |
+| `SpectralDiagonalBound.lean` | For a Hermitian complex matrix, every diagonal entry is bounded by the spectral radius. |
+| `Poisson.lean` | The standard symplectic Poisson bracket on `ℚ[x₁..xₘ, y₁..yₘ]`, with the Poisson axioms proved. |
+| `Dixmier.lean` | The Weyl algebra as operators on `ℚ[x₁..xₙ]`, the commutation relation, and the Dixmier conjecture as a statement only. |
+| `DualDerivations.lean` | Dual derivations built from the Jacobian inverse (the special case det J = -2). |
+| `StandardConjectures.lean` | Algebraic steps used in arguments about the standard conjectures, plus the conjectures as statements. |
 
-variable {n : Type _} [Fintype n] [DecidableEq n]
+## Theorem registry
 
-/-!
-# Diagonal Entry Bound by Spectral Radius
-
-STATUS: [PROVE-ME] - Concrete, zero-shortcut formalization target.
-Goal: Prove that for a normal (or Hermitian) matrix, every diagonal 
-entry is bounded above by the maximum absolute eigenvalue.
--/
-
-/-- Define the spectral radius of a matrix given its eigenvalues. -/
-noncomputable def spectralRadius (A : Matrix n n ℂ) (ev : n → ℂ) : ℝ :=
-  sup univ (fun i => Complex.abs (ev i))
-
-/-- Theorem: For a Hermitian matrix A, the absolute value of any diagonal entry 
-    A i i is bounded by the spectral radius. -/
-theorem diagonal_le_spectralRadius 
-    (A : Matrix n n ℂ) 
-    (hA : A.IsHermitian) 
-    (i : n) :
-    Complex.abs (A i i) ≤ spectralRadius A (hA.eigenvalues) := by
-  sorry
-Why Formalizing This Specific Bounds Lemma Works Well
-Self-Contained Scope: It relies strictly on standard linear algebra (Mathlib.LinearAlgebra.Matrix.Hermitian and spectrum tools), avoiding deep external dependencies.
-
-Clear Proof Path:
-
-Step 1: Express A 
-ii
-​
-  as e 
-i
-∗
-​
- Ae 
-i
-​
- .
-
-Step 2: Apply the spectral decomposition theorem (A=UΛU 
-∗
- ).
-
-Step 3: Rewrite A 
-ii
-​
- =∑ 
-k
-​
- ∣u 
-k,i
-​
- ∣ 
-2
- λ 
-k
-​
- , expressing A 
-ii
-​
-  as a convex combination of eigenvalues λ 
-k
-​
-  (since ∑ 
-k
-​
- ∣u 
-k,i
-​
- ∣ 
-2
- =1).
-
-Step 4: Apply the triangle inequality to bound ∣A 
-ii
-​
- ∣≤max 
-k
-​
- ∣λ 
-k
-​
- ∣.
-
-Completeness: Once the sorry is closed, Lean's kernel verifies every step deterministically.
-
-## Active Verification Priorities & Modules
-
-### Current Modules
-
-* **`JacobianCounterexample.lean`**: Counterexample polynomial map formulation.
-* **`DualDerivations.lean`**: Dual derivation operators $\partial'_i = \sum_j (J^{-1})_{ji} \partial_j$.
-* **`SpectralDiagonalBound.lean`**: Matrix spectral radius bounds on diagonal entries ($\forall i, |A_{ii}| \le \rho(A)$ for normal/Hermitian matrices).
-* **`Dixmier.lean`**: Dixmier conjecture & endomorphism commutativity bounds.
-* **`Poisson.lean`**: Symplectic Poisson bracket formulations.
-
----
-
-### Theorem Registry
-
-| Module | Theorem / Definition | Status | Proof Strategy / Notes |
+| Module | Theorem | Status | What it establishes |
 | :--- | :--- | :--- | :--- |
-| `DualDerivations.lean` | `dualDerivation_apply_F` | **`[PROVED]`** | Matrix adjugate identity $J \cdot \text{adj}(J) = \det(J) \cdot I$ |
-| `SpectralDiagonalBound.lean` | `diagonal_le_spectralRadius` | **`[CONJECTURAL]`** | Rayleigh quotient / Convex hull of spectrum |
-| `Poisson.lean` | `standardPoissonBracket_is_valid` | **`[PROVE-ME]`** | Jacobi identity verification |
+| `SpectralDiagonalBound` | `diagonal_eq_quadForm` | PROVED | `A i i = eᵢ* A eᵢ` as an indicator sum. |
+| `SpectralDiagonalBound` | `diagonal_le_spectralRadius` | PROVED | `‖A i i‖ ≤ sSup |λₖ|` for Hermitian `A` (spectral theorem, unitary rows sum to 1). |
+| `Poisson` | `standardPoissonBracket` (def) | defined | `{p,q} = Σᵢ (∂ₓᵢp ∂ᵧᵢq − ∂ᵧᵢp ∂ₓᵢq)`. |
+| `Poisson` | `_skew`, `_leibniz`, `_jacobi` | PROVED | The three Poisson axioms for that bracket. |
+| `Poisson` | `standardPoissonBracket_is_valid` | PROVED | The bracket is a `PoissonBracket` structure. |
+| `Dixmier` | `pderiv_mulX_comm` | PROVED | `∂ᵢ(xⱼ p) − xⱼ ∂ᵢ p = δᵢⱼ p`. |
+| `Dixmier` | `DixmierConjecture` | OPEN | Statement only (`def … : Prop`). Equivalent to the Poisson conjecture (Belov-Kanel–Kontsevich). |
+| `Poisson` | `PoissonConjecture` | OPEN | Statement only. |
+| `DualDerivations` | `dualDerivation_apply_F` | PROVED | Holds under the hypothesis `det J = C (-2)`, a specific constant, not the general Jacobian conjecture. |
+| `StandardConjectures` | `injective_is_surjective_of_pairing` etc. | PROVED | Finite-dimensional linear algebra steps. |
+
+Nothing in this repository proves or disproves the Jacobian, Dixmier or Poisson conjectures.

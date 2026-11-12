@@ -2,7 +2,6 @@ import Mathlib.Algebra.MvPolynomial.PDeriv
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Adjugate
 import Mathlib.Tactic
-import «JacobianCounterexample»
 
 open MvPolynomial Matrix
 

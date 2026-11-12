@@ -1,13 +1,13 @@
 name = "jacobian"
 version = "0.1.0"
-defaultTargets = ["JacobianCounterexample", "Poisson", "Dixmier", "DualDerivations", "SpectralDiagonalBound", "StandardConjectures"]
+defaultTargets = ["Jacobian", "Poisson", "Dixmier", "DualDerivations", "SpectralDiagonalBound", "StandardConjectures"]
 
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
 
 [[lean_lib]]
-name = "JacobianCounterexample"
+name = "Jacobian"
 
 [[lean_lib]]
 name = "Poisson"
