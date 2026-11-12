@@ -46,9 +46,11 @@ theorem finrank_eq_of_perfect_pairing (B : V →ₗ[K] W →ₗ[K] K)
 /-- Prop. 6.1 core: injective `L` between spaces in perfect pairing is surjective. -/
 theorem injective_is_surjective_of_pairing (B : V →ₗ[K] W →ₗ[K] K)
     (hL : ∀ x, (∀ y, B x y = 0) → x = 0) (hR : ∀ y, (∀ x, B x y = 0) → y = 0)
-    (L : V →ₗ[K] W) (hinj : Function.Injective L) : Function.Surjective L :=
-  (LinearMap.injective_iff_surjective_of_finrank_eq_finrank
-    (finrank_eq_of_perfect_pairing B hL hR)).1 hinj
+    (L : V →ₗ[K] W) (hinj : Function.Injective L) : Function.Surjective L := by
+  -- The term-mode version timed out at `whnf` in CI/local build (2026-11-12); stated stepwise
+  -- with `f := L` explicit so nothing has to be unified against metavariables.
+  have hrank : finrank K V = finrank K W := finrank_eq_of_perfect_pairing B hL hR
+  exact (LinearMap.injective_iff_surjective_of_finrank_eq_finrank (f := L) hrank).mp hinj
 
 end Pairing
 
